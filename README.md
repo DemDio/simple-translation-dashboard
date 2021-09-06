@@ -1,2 +1,2 @@
-# simple-translation-dashboard
-Simple tool that creates a dashboard to create key value pair 
+# Simple Translation Tool
+## Simply provides the ease of creating JSONs via a ui
