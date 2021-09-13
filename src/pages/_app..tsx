@@ -4,7 +4,9 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../../config/theme';
 import type { AppProps } from 'next/app'
+import {StartUp} from "../components/StartUp";
 
+StartUp();
 function MyApp({ Component, pageProps }: AppProps) {
 
     React.useEffect(() => {

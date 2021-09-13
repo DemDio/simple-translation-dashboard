@@ -1,27 +1,28 @@
-import {executeQuery} from "../../../lib/db";
-import {PageType} from "../../types";
+import {NextApiRequest, NextApiResponse} from "next";
+import {Prisma} from "../../components/Prisma";
+import withValidation from "../../utils/middleware/validation";
 
-export const getAllPagesApi = async ()=> {
+const prismaClient = Prisma.prismaClient();
+const Joi = require('joi');
+
+const validationSchema = Joi.object({
+    name: Joi.string().required(),
+    description: Joi.string().allow('').optional(),
+    projectId: Joi.required()
+})
+
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+    if (req.method !== "POST") {
+        return res.status(405).json({message: 'Method not allowed'});
+    }
     try {
-       return await executeQuery({
-            "query": 'SELECT * FROM pages',
-            "values": [],
-        });
-    } catch (error) {
-        console.log(error);
+        const savedContact = await prismaClient.page.create({
+            data: req.body
+        })
+        return res.json(savedContact);
+    } catch (e) {
+        return res.json(e);
     }
 }
 
-export const createNewPageApi = async (page:PageType) =>{
-    try{
-        console.log('Attempting');
-        const x = await executeQuery({
-            "query": "INSERT INTO pages (name , description) VALUES (?, ?)",
-            "values" : [page.name, page.description ?? ""]
-        });
-        console.log(x);
-    }
-    catch (error){
-        console.error(error);
-    }
-}
+export default withValidation(validationSchema, handler);
